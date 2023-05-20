@@ -6,12 +6,12 @@ const { error } = require("console");
 const errorHandler = (err) => {
     console.log(err.message, err.code);
     let errors = {
-        email:"",
+        username:"",
         password: ""
     }
 
-    if (err.message === "Email is incorrect!") {
-        errors.email = "Email not registered!"
+    if (err.message === "Username is incorrect!") {
+        errors.username = "Username not registered!"
     }
 
     if (err.message === "Password is incorrect!") {
@@ -19,7 +19,7 @@ const errorHandler = (err) => {
     }
 
     if (err.code == 11000){
-        errors.email = "Email is already exist!";
+        errors.username = "Username is already exist!";
         return errors;
     }
 
@@ -45,13 +45,13 @@ module.exports.login_get = (req,res) => {
     res.render('login');
 };
 module.exports.signup_post = async (req,res) => {
-    const { email, password } = req.body;
+    const { username, email, password } = req.body;
 
     try {
-        const user = await User.create({email, password});
+        const user = await User.create({username, email, password});
         const token = createToken(user._id);
         res.cookie('jwt', token, {httpOnly: true, maxAge: maxAge * 1000});
-        res.status(201).json({user: user._id});
+        res.status(201).json({user: user._id, status: 200});
     } catch (err) {
         const errors = errorHandler(err);
         res.status(400).json({errors});
@@ -59,13 +59,13 @@ module.exports.signup_post = async (req,res) => {
     // res.send('signup');
 };
 module.exports.login_post = async (req,res) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
     try {
-        const user = await User.login(email,password);
+        const user = await User.login(username,password);
         const token = createToken(user._id);
         res.cookie('jwt', token, {httpOnly: true, maxAge : maxAge * 1000});
-        res.status(200).json({user: user._id});
+        res.status(200).json({user: user._id, status: 200});
     } catch (error) {
         const errors = errorHandler(error);
         res.status(400).json({errors});
