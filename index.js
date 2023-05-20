@@ -15,7 +15,7 @@ app.use(cookieParser());
 
 app.set("view engine", "ejs");
 
-const dbUrl = "mongodb+srv://akbar:$.*LUQLkWnN5VW$@clusterbarbarrlink.uxgwinq.mongodb.net/node-auth"
+const dbUrl = ""
 mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(console.log("MongoDB Connection Success!"))
 .catch((err) => console.log(err));
