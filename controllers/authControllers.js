@@ -80,13 +80,11 @@ module.exports.logout_get = (req, res) => {
 module.exports.datauser = async (req, res) => {
     const { id } = req.body;
 
-    User.findById(id, function (error, docs) {
+    try {
+        const user = await User.findById(id);
+        res.status(200).json({ username: user.username, email:user.email, status: 200 });
+    } catch (err) {
+        res.status(400).json({ error: "Invalid ID", status: 400 });
+    }
 
-        if (error) {
-            res.status(400).json({ error });
-        }
-        else {
-            res.status(200).json({ user: id, docs });
-        }
-    })
 }
