@@ -112,7 +112,7 @@ GET Endpoint for retrieving user data in EmpowerU App
 
 **URL**   : https://empoweru-backend-vyxkms4tbq-et.a.run.app/datauser
 
-**Method**: GET
+**Method**: POST
 
 **Body** (JSON)
 ```
