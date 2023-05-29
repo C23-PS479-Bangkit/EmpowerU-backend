@@ -2,8 +2,8 @@ const { json } = require("body-parser");
 const User = require("../models/User");
 const Comment = require("../models/Comment");
 const Location = require("../models/Location");
-const jwt = require("jsonwebtoken");
-const { error } = require("console");
+var axios = require('axios');
+require('dotenv').config();
 
 const errorHandler = (err) => {
     console.log(err.message, err.code);
@@ -19,6 +19,33 @@ const errorHandler = (err) => {
     return errors;
 };
 
+const getLocationData = (place_id) => {
+    var config = {
+      method: 'get',
+      url: `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=name%2Ctypes%2Cformatted_address%2Ceditorial_summary&key=${process.env.GOOGLE_MAPS_API_KEY}&languages=id`,
+      headers: { }
+    };
+
+    var photo = {
+        method: 'get',
+        url: `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=photos&key=${process.env.GOOGLE_MAPS_API_KEY}&languages=id`,
+        headers: { }
+    };
+    
+    axios(config)
+    .then(function (response) {
+        console.log(JSON.stringify(response.data));
+    })
+    // axios(photo)
+    // .then(function (response) {
+    //     console.log(JSON.stringify(response.data));
+    // })
+    .catch(function (error) {
+        console.log(error);
+    });
+};
+
+getLocationData("ChIJN1t_tDeuEmsRUsoyG83frY4");
 
 module.exports.get_list_location = async (req,res) => {
     Location.find({}).then((postObject) => {
@@ -33,7 +60,7 @@ module.exports.create_location = async (req,res) => {
         res.status(200).json({ locationID: location._id });
     } catch (err) {
         const message = errorHandler(err);
-        res.status(400).json({ errors: message });
+        res.status(400).json({ error: message });
     }
 }
 
@@ -46,6 +73,6 @@ module.exports.create_comment = async (req,res) => {
         res.status(200).json({ locationID: location._id });
     } catch (err) {
         console.log(err)
-        res.status(400).json({ errors: err.message });
+        res.status(400).json({ error: err.message });
     }
 }
