@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 const commentSchema = new mongoose.Schema({
     userID: {
         type: String,
-        required: [true, "Please enter a User ID"],
-        unique: true
+        required: [true, "Please enter a User ID"]
     },
     starRating: {
         type: Number,

@@ -1,21 +1,23 @@
 const mongoose = require("mongoose");
 
 const locationSchema = new mongoose.Schema({
-    name: {
+    gmapsID: {
         type: String,
-        required: [true, "Please enter a location name"],
-        unique: true,
-        lowercase: true,
-    },
-    gMapsID: {
-        type: String,
-        required: [true, "Please enter an GMapsID"],
-        lowercase: true,
+        required: [true, "Please enter a location ID"],
         unique: true
     },
+    starRating: {
+        type: Number,
+        default: 0
+    },
+    commentsID: [{
+        id: String
+    }],
+    impression: {
+        type: String,
+        default: "Netral"
+    }
 })
-
-
 
 const Location = mongoose.model("location", locationSchema);
 
