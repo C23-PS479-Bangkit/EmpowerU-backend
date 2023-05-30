@@ -139,7 +139,8 @@ GET Endpoint for retrieving user data in EmpowerU App
 ```
 </details>
 
-<summary>List Location</summary>
+<details>
+           <summary>List Location</summary>
 Endpoint to display the list location on the EmpowerU App
 
 **URL**   : https://empoweru-backend-vyxkms4tbq-et.a.run.app/get_list_location
@@ -192,7 +193,8 @@ Endpoint to display the list location on the EmpowerU App
 ```
 </details>
 
-<summary>Create Location</summary>
+<details>
+           <summary>Create Location</summary>
 Endpoint for Creating Location data in EmpowerU App
 
 **URL**   : https://empoweru-backend-vyxkms4tbq-et.a.run.app/create_location
@@ -223,7 +225,8 @@ Endpoint for Creating Location data in EmpowerU App
 ```
 </details>
 
-<summary>Create Comment</summary>
+<details>
+           <summary>Create Comment</summary>
 Endpoint for Creatingin Comment/Review in EmpowerU App
 
 **URL**   : https://empoweru-backend-vyxkms4tbq-et.a.run.app/create_comment
@@ -252,7 +255,8 @@ Endpoint for Creatingin Comment/Review in EmpowerU App
 ```
 </details>
 
-<summary>Get Location</summary>
+<details>
+           <summary>Get Location</summary>
 GET Endpoint for retrieving location data in EmpowerU App
 
 **URL**   : https://empoweru-backend-vyxkms4tbq-et.a.run.app/get_location
