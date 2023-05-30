@@ -152,8 +152,7 @@ Endpoint to display the list location on the EmpowerU App
 {
      address: formatted_address,
      name: name,
-     type: types,
-     GMapsID: myCursor[i].gmapsID
+     type: types
 }
 ```
 
@@ -188,7 +187,9 @@ Endpoint to display the list location on the EmpowerU App
 **Failed Response** (JSON)
 ```
 {
-    "error":""
+    "error": {
+        "address": ""
+    }
 }
 ```
 </details>
@@ -203,15 +204,15 @@ Endpoint for Creating Location data in EmpowerU App
 
 **Body** (JSON)
 ```
-{
-    
+{ 
+    "gmapsID":"ChIJjfWrPQnsaS4RL74uCjVlMw0"
 }
 ```
 
 **Success Response** (JSON)
 ```
 {
-    
+    "locationID": "ChIJjfWrPQnsaS4RL74uCjVlMw0"
 }
 ```
 
@@ -235,15 +236,18 @@ Endpoint for Creatingin Comment/Review in EmpowerU App
 
 **Body** (JSON)
 ```
-{
-    
+{ 
+	"locationID": "ChIJjfWrPQnsaS4RL74uCjVlMw0",
+	"userID": "646as21323das1231sd1wd1g1", 
+	"starRating": "",
+	"comment": "this is so amazing"
 }
 ```
 
 **Success Response** (JSON)
 ```
 {
-    
+    "GMapsID": "ChIJjfWrPQnsaS4RL74uCjVlMw0"
 }
 ```
 
@@ -266,13 +270,20 @@ GET Endpoint for retrieving location data in EmpowerU App
 **Body** (JSON)
 ```
 {
-    
+   "GMapsID": "ChIJjfWrPQnsaS4RL74uCjVlMw0"
+}    
 ```
 
 **Success Response** (JSON)
 ```
 {
-    
+    "address": "Jl. Margonda Raya No.358, Kemiri Muka, Kecamatan Beji, Kota Depok, Jawa Barat 16423, Indonesia",
+    "name": "MargoCity",
+    "type":[
+            "shopping_mall",
+            "point_of_interest",
+            "establishment"
+            ],
 }
 ```
 
