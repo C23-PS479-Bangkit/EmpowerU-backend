@@ -237,8 +237,8 @@ Endpoint for Creatingin Comment/Review in EmpowerU App
 **Body** (JSON)
 ```
 { 
-	"locationID": "ChIJjfWrPQnsaS4RL74uCjVlMw0",
-	"userID": "646as21323das1231sd1wd1g1", 
+	"locationID": "yourlocationid",
+	"userID": "youruserid", 
 	"starRating": "",
 	"comment": "this is so amazing"
 }
@@ -267,11 +267,9 @@ GET Endpoint for retrieving location data in EmpowerU App
 
 **Method**: GET
 
-**Body** (JSON)
+**Query** (JSON)
 ```
-{
-   "GMapsID": "ChIJjfWrPQnsaS4RL74uCjVlMw0"
-}    
+https://empoweru-backend-vyxkms4tbq-et.a.run.app/get_location?GMapsID=<Input your GMapsID Here>   
 ```
 
 **Success Response** (JSON)
