@@ -71,11 +71,11 @@ module.exports.create_location = async (req, res) => {
 }
 
 module.exports.create_comment = async (req, res) => {
-    const { locationID, userID, starRating, comment } = req.body;
+    const { GMapsID, userID, starRating, comment } = req.body;
     try {
         await User.findOneAndUpdate({ _id: userID }, { $inc: { "comments": 1 } });
         const newComment = await Comment.create({ userID, starRating, comment });
-        const location = await Location.findOneAndUpdate({ _id: locationID }, { $push: { "commentsID": newComment._id } });
+        const location = await Location.findOneAndUpdate({ gmapsID: GMapsID }, { $push: { "commentsID": newComment._id } });
         res.status(200).json({ GMapsID: location.gmapsID });
     } catch (err) {
         console.log(err)
