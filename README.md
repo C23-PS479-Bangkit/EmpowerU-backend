@@ -168,6 +168,7 @@ Endpoint to display the list location on the EmpowerU App
                 "point_of_interest",
                 "establishment"
             ],
+            "starRating": 0,
             "GMapsID": "ChIJN1t_tDeuEmsRUsoyG83frY4"
         },
         {
@@ -178,6 +179,7 @@ Endpoint to display the list location on the EmpowerU App
                 "point_of_interest",
                 "establishment"
             ],
+            "rating": 0,
             "GMapsID": "ChIJjfWrPQnsaS4RL74uCjVlMw0"
         }
     ]
@@ -282,6 +284,8 @@ https://empoweru-backend-vyxkms4tbq-et.a.run.app/get_location?GMapsID=<Input you
             "point_of_interest",
             "establishment"
             ],
+    "rating": 7.235294117647059,
+    "impression": "Netral"
 }
 ```
 
