@@ -6,12 +6,18 @@ const locationSchema = new mongoose.Schema({
         required: [true, "Please enter a location ID"],
         unique: true
     },
+    name: {
+        type: String,
+        required: true,
+        unique : true
+    }
+    ,
     starRating: {
         type: Number,
         default: 0
     },
     commentsID: [{
-        id: String
+        type: mongoose.Schema.Types.ObjectId, ref: "comment"
     }],
     impression: {
         type: String,

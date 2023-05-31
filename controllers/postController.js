@@ -39,17 +39,42 @@ const getLocationData = async (place_id) => {
         });
 };
 
+// create static method into location
+const countRating = async function(location) {
+    let totalRating = 0;
+    const GMapsID = location.gmapsID;
+    const listComment = location.commentsID;
+    for(let i = 0; i<listComment.length ; i++){
+        const comment = await Comment.findById(listComment[i]._id);
+        if(comment == null) {
+            await Location.findOneAndUpdate({_id : location._id}, {$pull : { commentsID : listComment[i]._id}});
+            continue;
+        }
+        totalRating += comment.starRating;
+    }
+    const result = totalRating/listComment.length;
+    if(listComment.length == 0) {
+        await Location.findOneAndUpdate({"gmapsID":GMapsID}, {starRating:0});
+        return 0;
+    }
+    await Location.findOneAndUpdate({"gmapsID":GMapsID}, {starRating:result});
+    return result;
+};
+
 module.exports.get_list_location = async (req, res) => {
     try {
         let listLocation = [];
         var myCursor = await Location.find({});
         for (let i = 0; i < myCursor.length; i++) {
-            const result = await getLocationData(myCursor[i].gmapsID);
+            const result = await getLocationData(myCursor[i].gmapsID);        
+            countRating(myCursor[i]);
+            const { starRating } = await Location.findOne({gmapsID : myCursor[i].gmapsID})
             const { formatted_address, name, types } = result;
             listLocation.push({
                 address: formatted_address,
                 name: name,
                 type: types,
+                rating : starRating,
                 GMapsID: myCursor[i].gmapsID
             });
         }
@@ -62,24 +87,12 @@ module.exports.get_list_location = async (req, res) => {
 module.exports.create_location = async (req, res) => {
     const { gmapsID } = req.body;
     try {
-        const location = await Location.create({ gmapsID });
+        const { name } = await getLocationData(gmapsID);
+        const location = await Location.create({ gmapsID: gmapsID, name: name });
         res.status(200).json({ locationID: location._id });
     } catch (err) {
         const message = errorHandler(err);
         res.status(400).json({ error: message });
-    }
-}
-
-module.exports.create_comment = async (req, res) => {
-    const { GMapsID, userID, starRating, comment } = req.body;
-    try {
-        await User.findOneAndUpdate({ _id: userID }, { $inc: { "comments": 1 } });
-        const newComment = await Comment.create({ userID, starRating, comment });
-        const location = await Location.findOneAndUpdate({ gmapsID: GMapsID }, { $push: { "commentsID": newComment._id } });
-        res.status(200).json({ GMapsID: location.gmapsID });
-    } catch (err) {
-        console.log(err)
-        res.status(400).json({ error: err.message });
     }
 }
 
@@ -88,10 +101,26 @@ module.exports.get_location = async (req, res) => {
     try {
         const location = await getLocationData(GMapsID);
         const { formatted_address, name, types } = location;
-        res.status(200).json({ address: formatted_address, name: name, type: types });
+        const locationObject = await Location.findOne({"gmapsID":GMapsID});
+        countRating(locationObject);
+        res.status(200).json({ address: formatted_address, name: name, type: types, rating: locationObject.starRating, impression: locationObject.impression});
     } catch (err) {
         console.log(err)
         res.status(400).json({ error: err.message });
     }
 }
+
+module.exports.create_comment = async (req, res) => {
+    const { GMapsID, userID, starRating, comment } = req.body;
+    try {
+        const userUpdate = await User.findOneAndUpdate({ _id: userID }, { $inc: { "comments": 1 } });
+        const newComment = await Comment.create({ userID : userUpdate._id, starRating: starRating, comment: comment });
+        const location = await Location.findOneAndUpdate({ gmapsID: GMapsID }, { $push: { "commentsID": newComment._id } });
+        res.status(200).json({ GMapsID: location.gmapsID });
+    } catch (err) {
+        console.log(err)
+        res.status(400).json({ error: err.message });
+    }
+}
+
 
