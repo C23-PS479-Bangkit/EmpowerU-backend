@@ -140,7 +140,7 @@ GET Endpoint for retrieving user data in EmpowerU App
 </details>
 
 <details>
-           <summary>List Location</summary>
+           <summary>GET List Location</summary>
 Endpoint to display the list location on the EmpowerU App
 
 **URL/Query**   : https://empoweru-backend-vyxkms4tbq-et.a.run.app/get_list_location
@@ -237,7 +237,7 @@ Endpoint for Creatingin Comment/Review in EmpowerU App
 **Body** (JSON)
 ```
 { 
-	"locationID": "yourlocationid",
+	"GMapsID": "yourlocationid",
 	"userID": "youruserid", 
 	"starRating": "",
 	"comment": "this is so amazing"
@@ -284,6 +284,37 @@ https://empoweru-backend-vyxkms4tbq-et.a.run.app/get_location?GMapsID=<Input you
             ],
     "rating": 7.235294117647059,
     "impression": "Netral"
+}
+```
+
+**Failed Response** (JSON)
+```
+{
+    "error": "Cannot destructure property 'formatted_address' of 'location' as it is undefined."
+}
+```
+</details>
+<details>
+           <summary>Get List Comment</summary>
+GET Endpoint for retrieving list of comment from specific location model in EmpowerU App
+
+**Method**: GET
+
+**Query** (JSON)
+```
+https://empoweru-backend-vyxkms4tbq-et.a.run.app/get_list_comment?GMapsID=<Input your GMapsID Here>   
+```
+
+**Success Response** (JSON)
+```
+{
+    "result": [
+        {
+            "username": "budi",
+            "starRating": 5,
+            "comment": "Tempat saya berbelanja dan chilling bareng teman, sangat nyaman"
+        },
+    ]
 }
 ```
 

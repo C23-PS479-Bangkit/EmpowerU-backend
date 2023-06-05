@@ -6,6 +6,11 @@ const commentSchema = new mongoose.Schema({
         required: [true, "Please enter a User ID"],
         ref: "user"
     },
+    username : {
+        type : String,
+        required: true
+    }
+    ,
     starRating: {
         type: Number,
         required: true
@@ -13,6 +18,9 @@ const commentSchema = new mongoose.Schema({
     comment: {
         type: String,
         required: true
+    },
+    urlPhoto : {
+        type: String
     }
 })
 
