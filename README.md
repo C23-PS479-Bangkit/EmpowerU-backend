@@ -143,18 +143,9 @@ GET Endpoint for retrieving user data in EmpowerU App
            <summary>List Location</summary>
 Endpoint to display the list location on the EmpowerU App
 
-**URL**   : https://empoweru-backend-vyxkms4tbq-et.a.run.app/get_list_location
+**URL/Query**   : https://empoweru-backend-vyxkms4tbq-et.a.run.app/get_list_location
 
 **Method**: GET
-
-**Body** (JSON)
-```
-{
-     address: formatted_address,
-     name: name,
-     type: types
-}
-```
 
 **Success Response** (JSON)
 ```
