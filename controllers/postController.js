@@ -26,19 +26,6 @@ const getLocationData = async (place_id) => {
         headers: {}
     };
 
-    var photo = {
-        method: 'get',
-        url: `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=photos&key=${process.env.GOOGLE_MAPS_API_KEY}&languages=id`,
-        headers: {}
-    };
-
-    // await axios(photo)
-    //     .then(function (response) {
-    //         const { result } = response.data;
-    //         console.log(`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${result.photos[0].photo_reference}&key=${process.env.GOOGLE_MAPS_API_KEY}`);
-    //         return lol;
-    //     });
-
     return await axios(config)
         .then(function (response) {
             const { result } = response.data;
@@ -128,7 +115,7 @@ module.exports.create_comment = async (req, res) => {
     const { GMapsID, userID, starRating, comment } = req.body;
     try {
         const userUpdate = await User.findOneAndUpdate({ _id: userID }, { $inc: { "comments": 1 } });
-        const newComment = await Comment.create({ userID: userUpdate._id, starRating: starRating, comment: comment });
+        const newComment = await Comment.create({ userID: userUpdate._id, username: userUpdate.username,starRating: starRating, comment: comment });
         const location = await Location.findOneAndUpdate({ gmapsID: GMapsID }, { $push: { "commentsID": newComment._id } });
         res.status(200).json({ GMapsID: location.gmapsID });
     } catch (err) {
@@ -136,5 +123,17 @@ module.exports.create_comment = async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 }
+
+module.exports.get_list_comment = async (req,res) => {
+    const GMapsID = req.query.GMapsID;
+    try {
+        const locationObject = await Location.findOne({ "gmapsID": GMapsID });
+        const result = await Comment.find({"_id": {$in : locationObject.commentsID}},{_id:0,__v:0,userID:0});
+        res.status(200).json({ result });
+    } catch (err) {
+        console.log(err)
+        res.status(400).json({ error: err.message });
+    }
+};
 
 
