@@ -140,21 +140,12 @@ GET Endpoint for retrieving user data in EmpowerU App
 </details>
 
 <details>
-           <summary>List Location</summary>
+           <summary>GET List Location</summary>
 Endpoint to display the list location on the EmpowerU App
 
-**URL**   : https://empoweru-backend-vyxkms4tbq-et.a.run.app/get_list_location
+**URL/Query**   : https://empoweru-backend-vyxkms4tbq-et.a.run.app/get_list_location
 
 **Method**: GET
-
-**Body** (JSON)
-```
-{
-     address: formatted_address,
-     name: name,
-     type: types
-}
-```
 
 **Success Response** (JSON)
 ```
@@ -162,25 +153,32 @@ Endpoint to display the list location on the EmpowerU App
     "status": 200,
     "listLocation": [
         {
-            "address": "48 Pirrama Rd, Pyrmont NSW 2009, Australia",
-            "name": "Google Workplace 6",
+            "address": "94XR+3X8, Turida, Sandubaya, Mataram City, West Nusa Tenggara 83233, Indonesia",
+            "name": "Aqshal Garage",
             "type": [
-                "point_of_interest",
-                "establishment"
-            ],
-            "starRating": 0,
-            "GMapsID": "ChIJN1t_tDeuEmsRUsoyG83frY4"
-        },
-        {
-            "address": "Jl. Margonda Raya No.358, Kemiri Muka, Kecamatan Beji, Kota Depok, Jawa Barat 16423, Indonesia",
-            "name": "MargoCity",
-            "type": [
-                "shopping_mall",
+                "cafe",
+                "food",
                 "point_of_interest",
                 "establishment"
             ],
             "rating": 0,
-            "GMapsID": "ChIJjfWrPQnsaS4RL74uCjVlMw0"
+            "GMapsID": "ChIJS6x1ERq5zS0RmuaiugTZ6yI",
+            "impression": "Netral",
+            "urlPhoto": "No Photos"
+        },
+        {
+            "address": "Jl. Raya Kuta, Kuta, Kec. Kuta, Kabupaten Badung, Bali 80361, Indonesia",
+            "name": "Pabrik Kata-Kata Joger",
+            "type": [
+                "shopping_mall",
+                "point_of_interest",
+                "store",
+                "establishment"
+            ],
+            "rating": 0,
+            "GMapsID": "ChIJ3QOhiqVG0i0RsSH9KdWoZlM",
+            "impression": "Netral",
+            "urlPhoto": "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=AZose0lrJlUJGI8RMXaArEojiNlcroH-tHftdrtAY-RqI6y-z9f9bwEALC8wNf0JZjJ524oBxHk8-dbmsiInY5IMMqH2u5HSPcYoXKP7fdneyz9f2iFdcB57lkHcAiGKgqJSQkS15tAlQb2Zo4e2DidS14ge-WTveJxglhLs5jeqgmwwZtsz&key=INSERT_GMAPS_API_KEY"
         }
     ]
 }
@@ -239,7 +237,7 @@ Endpoint for Creatingin Comment/Review in EmpowerU App
 **Body** (JSON)
 ```
 { 
-	"locationID": "yourlocationid",
+	"GMapsID": "yourlocationid",
 	"userID": "youruserid", 
 	"starRating": "",
 	"comment": "this is so amazing"
@@ -286,6 +284,37 @@ https://empoweru-backend-vyxkms4tbq-et.a.run.app/get_location?GMapsID=<Input you
             ],
     "rating": 7.235294117647059,
     "impression": "Netral"
+}
+```
+
+**Failed Response** (JSON)
+```
+{
+    "error": "Cannot destructure property 'formatted_address' of 'location' as it is undefined."
+}
+```
+</details>
+<details>
+           <summary>Get List Comment</summary>
+GET Endpoint for retrieving list of comment from specific location model in EmpowerU App
+
+**Method**: GET
+
+**Query** (JSON)
+```
+https://empoweru-backend-vyxkms4tbq-et.a.run.app/get_list_comment?GMapsID=<Input your GMapsID Here>   
+```
+
+**Success Response** (JSON)
+```
+{
+    "result": [
+        {
+            "username": "budi",
+            "starRating": 5,
+            "comment": "Tempat saya berbelanja dan chilling bareng teman, sangat nyaman"
+        },
+    ]
 }
 ```
 
