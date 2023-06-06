@@ -22,6 +22,19 @@ const locationSchema = new mongoose.Schema({
     impression: {
         type: String,
         default: "Netral"
+    },
+    address: {
+        type: String,
+        required: true
+    },
+    types: {
+        type: String,
+        required: true,
+        default: "No type"
+    },
+    urlPhoto : {
+        type: String,
+        default: "No Photos"
     }
 })
 
