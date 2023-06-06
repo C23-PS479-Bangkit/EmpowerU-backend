@@ -29,6 +29,7 @@ const getLocationData = async (place_id) => {
     return await axios(config)
         .then(function (response) {
             const { result } = response.data;
+            // console.log(result);
             return result;
         });
 };
@@ -126,6 +127,7 @@ module.exports.create_comment = async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 }
+
 
 module.exports.get_list_comment = async (req, res) => {
     const GMapsID = req.query.GMapsID;
