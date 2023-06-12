@@ -20,7 +20,8 @@ const commentSchema = new mongoose.Schema({
         required: true
     },
     urlPhoto : {
-        type: String
+        type: String,
+        default: ""
     }
 })
 

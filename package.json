@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/akbarmaliki10/nodejs-jwt#readme",
   "dependencies": {
+    "@google-cloud/storage": "^6.11.0",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
