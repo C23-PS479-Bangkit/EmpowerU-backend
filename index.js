@@ -13,7 +13,7 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json());
+app.use(express.json({limit:"1mb", extended: true}));
 app.use(cookieParser());
 
 app.set("view engine", "ejs");
