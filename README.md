@@ -240,9 +240,11 @@ Endpoint for Creatingin Comment/Review in EmpowerU App
 	"GMapsID": "yourlocationid",
 	"userID": "youruserid", 
 	"starRating": "",
-	"comment": "this is so amazing"
+	"comment": "this is so amazing",
+    "base64" : "exampleofbase64="
 }
 ```
+**Notes**: base64 property is optional
 
 **Success Response** (JSON)
 ```
@@ -312,7 +314,8 @@ https://empoweru-backend-vyxkms4tbq-et.a.run.app/get_list_comment?GMapsID=<Input
         {
             "username": "budi",
             "starRating": 5,
-            "comment": "Tempat saya berbelanja dan chilling bareng teman, sangat nyaman"
+            "comment": "Tempat saya berbelanja dan chilling bareng teman, sangat nyaman",
+            "urlPhoto": "some/url"
         },
     ]
 }

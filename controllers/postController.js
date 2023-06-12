@@ -4,6 +4,11 @@ const Comment = require("../models/Comment");
 const Location = require("../models/Location");
 var axios = require('axios');
 require('dotenv').config();
+const { Storage } = require('@google-cloud/storage')
+const path = require('path');
+const fs = require("fs");
+
+
 
 const errorHandler = (err) => {
     console.log(err.message, err.code);
@@ -55,6 +60,41 @@ const countRating = async function (location) {
     await Location.findOneAndUpdate({ "gmapsID": GMapsID }, { starRating: result });
     return result;
 };
+
+const processImage= async function(base64String,GMapsID) {
+    if (base64String == null) {
+        return "";
+    }
+    try {
+        const gcs = new Storage({
+            keyFilename: path.join(__dirname,"../capstone-project-387306-60ec83c14618.json"),
+            projectId: `${process.env.PROJECT_ID}`
+        })
+        const imageBucket = gcs.bucket(`${process.env.BUCKET_NAME}`)
+        const fileName = `comment-${GMapsID}-${new Date().getDate()}-${new Date().getMonth()}-${new Date().getDate()}-${new Date().getHours()}-${new Date().getSeconds()}.jpg`;
+        fs.writeFile(fileName, base64String, {encoding:"base64"},async function(err){
+            if (err){
+                console.log(err);
+            } else {
+                console.log("Convert Image Success!");
+            } 
+        });
+        imageBucket.upload(fileName, { gzip: true },(err,file) => {
+            if (err) {
+                console.log(err);
+                throw err;
+            } else {
+                console.log("Upload success!");
+                fs.unlinkSync(fileName);
+            }
+        });
+        return `https://storage.googleapis.com/empoweru-comment-image/${fileName}`;
+    } catch(err) {
+        throw err;
+    }
+
+}
+
 
 module.exports.get_list_location = async (req, res) => {
     try {
@@ -116,15 +156,20 @@ module.exports.get_location = async (req, res) => {
 }
 
 module.exports.create_comment = async (req, res) => {
-    const { GMapsID, userID, starRating, comment } = req.body;
+    const { GMapsID, userID, starRating, comment, base64 } = req.body;
     try {
+        const gcsUrl = await processImage(base64, GMapsID);
         const userUpdate = await User.findOneAndUpdate({ _id: userID }, { $inc: { "comments": 1 } });
-        const newComment = await Comment.create({ userID: userUpdate._id, username: userUpdate.username, starRating: starRating, comment: comment });
+        const newComment = await Comment.create({ userID: userUpdate._id, username: userUpdate.username, starRating: starRating, comment: comment, urlPhoto: gcsUrl });
         const location = await Location.findOneAndUpdate({ gmapsID: GMapsID }, { $push: { "commentsID": newComment._id } });
         res.status(200).json({ GMapsID: location.gmapsID });
     } catch (err) {
         console.log(err)
-        res.status(400).json({ error: err.message });
+        if(err.message == "The \"data\" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received undefined") {
+            res.status(400).json({ error: "Please enter base64 string" });
+        } else {
+            res.status(400).json({ error: err.message });
+        }
     }
 }
 
