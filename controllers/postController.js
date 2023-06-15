@@ -34,7 +34,6 @@ const getLocationData = async (place_id) => {
     return await axios(config)
         .then(function (response) {
             const { result } = response.data;
-            // console.log(result);
             return result;
         });
 };
@@ -61,25 +60,25 @@ const countRating = async function (location) {
     return result;
 };
 
-const processImage= async function(base64String,GMapsID) {
+const processImage = async function (base64String, GMapsID) {
     if (base64String == null) {
         return "";
     }
     try {
         const gcs = new Storage({
-            keyFilename: path.join(__dirname,"../capstone-project-387306-60ec83c14618.json"),
+            keyFilename: path.join(__dirname, "../capstone-project-387306-60ec83c14618.json"),
             projectId: `${process.env.PROJECT_ID}`
         })
         const imageBucket = gcs.bucket(`${process.env.BUCKET_NAME}`)
         const fileName = `comment-${GMapsID}-${new Date().getDate()}-${new Date().getMonth()}-${new Date().getDate()}-${new Date().getHours()}-${new Date().getSeconds()}.jpg`;
-        fs.writeFile(fileName, base64String, {encoding:"base64"},async function(err){
-            if (err){
+        fs.writeFile(fileName, base64String, { encoding: "base64" }, async function (err) {
+            if (err) {
                 console.log(err);
             } else {
                 console.log("Convert Image Success!");
-            } 
+            }
         });
-        imageBucket.upload(fileName, { gzip: true },(err,file) => {
+        imageBucket.upload(fileName, { gzip: true }, (err, file) => {
             if (err) {
                 console.log(err);
                 throw err;
@@ -89,12 +88,30 @@ const processImage= async function(base64String,GMapsID) {
             }
         });
         return `https://storage.googleapis.com/empoweru-comment-image/${fileName}`;
-    } catch(err) {
+    } catch (err) {
         throw err;
     }
-
 }
 
+const predictImpression = async function (GMapsID, comment, newCommentID) {
+    try {
+        const location = await Location.findOneAndUpdate({ gmapsID: GMapsID }, { $push: { "commentsID": newCommentID } });
+        const { data } = await axios.post(`${process.env.ML_API}`, {
+            "comment": comment
+        });
+        const newImpressionCount = location.impressionCount + data.impression;
+        const meanImpression = newImpressionCount / location.commentsID.length;
+        let impression = location.impression;
+        if (meanImpression > 0.5) {
+            impression = "Positive"
+        } else {
+            impression = "Negative"
+        }
+        return await Location.findOneAndUpdate({ gmapsID: GMapsID }, { $inc: { "impressionCount": data.impression }, $set: { "impression": impression } });
+    } catch (error) {
+        throw error;
+    }
+};
 
 module.exports.get_list_location = async (req, res) => {
     try {
@@ -131,7 +148,6 @@ module.exports.create_location = async (req, res) => {
         if (photos != null) {
             urlString = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photos[0].photo_reference}&key=INSERT_GMAPS_API_KEY`;
         }
-        console.log(formatted_address)
         const location = await Location.create({ gmapsID: GMapsID, name: name, address: formatted_address, types: types[0], urlPhoto: urlString });
         res.status(200).json({ locationID: location._id });
     } catch (err) {
@@ -161,11 +177,11 @@ module.exports.create_comment = async (req, res) => {
         const gcsUrl = await processImage(base64, GMapsID);
         const userUpdate = await User.findOneAndUpdate({ _id: userID }, { $inc: { "comments": 1 } });
         const newComment = await Comment.create({ userID: userUpdate._id, username: userUpdate.username, starRating: starRating, comment: comment, urlPhoto: gcsUrl });
-        const location = await Location.findOneAndUpdate({ gmapsID: GMapsID }, { $push: { "commentsID": newComment._id } });
+        location = await predictImpression(GMapsID, comment, newComment._id);
         res.status(200).json({ GMapsID: location.gmapsID });
     } catch (err) {
         console.log(err)
-        if(err.message == "The \"data\" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received undefined") {
+        if (err.message == "The \"data\" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received undefined") {
             res.status(400).json({ error: "Please enter base64 string" });
         } else {
             res.status(400).json({ error: err.message });
