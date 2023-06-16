@@ -5,6 +5,17 @@ Backend service for EmpowerU mobile app
 https://empoweru-backend-vyxkms4tbq-et.a.run.app
 
 ## How to run the app
+Before running the app, you need to provide some environment variable such as:
+- DB_URL
+- GOOGLE_MAPS_API_KEY
+- PROJECT_ID
+- BUCKET_NAME
+- PRIVATE_KEY_ID
+- PRIVATE_KEY
+- CLIENT_EMAIL
+- CLIENT_ID
+- CLIENT_X509_CERT_URL
+- ML_API
 1. Install the required package
 ```
 npm install
