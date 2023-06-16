@@ -4,6 +4,16 @@ Backend service for EmpowerU mobile app
 ## Checkout our deployed App
 https://empoweru-backend-vyxkms4tbq-et.a.run.app
 
+## How to run the app
+1. Install the required package
+```
+npm install
+```
+2. Run the app 
+```
+npm start
+```
+
 ## EmpowerU Endpoint
 
 <details>
